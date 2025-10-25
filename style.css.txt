@@ -1,0 +1,39 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f9f9f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+canvas {
+  margin-top: 20px;
+  max-width: 100%;
+  border: 2px solid #333;
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+a {
+  display: block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: white;
+  background: #333;
+  padding: 10px;
+  border-radius: 5px;
+}
