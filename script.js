@@ -26,15 +26,48 @@ imageUpload.addEventListener("change", (e) => {
 });
 
 // Generate caption (currently random)
-function getCaption() {
-  const captions = [
-    "When you realize it's Monday again",
-    "That moment you forgot your homework",
-    "AI knows your pain",
-    "Me trying to be productive",
-    "Just one more meme..."
-  ];
-  return captions[Math.floor(Math.random() * captions.length)];
+
+const HUGGINGFACE_API_KEY = "process.env.HUGGINGFACE_API_KEY;"; 
+
+async function getCaption(promptText = "funny meme caption about daily life") {
+  const API_URL = "https://api-inference.huggingface.co/models/gpt2";
+
+  const headers = {
+    "Authorization": `Bearer ${HUGGINGFACE_API_KEY}`,
+    "Content-Type": "application/json"
+  };
+
+  const body = JSON.stringify({
+    inputs: promptText,
+    parameters: {
+      max_new_tokens: 20,
+      temperature: 0.9,
+      top_p: 0.9
+    }
+  });
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers,
+      body
+    });
+
+    const result = await response.json();
+    console.log(result); // optional: for debugging
+
+    // Extract the generated text
+    if (result && Array.isArray(result) && result[0]?.generated_text) {
+      let caption = result[0].generated_text.trim();
+      caption = caption.replace(/\n/g, " ").slice(0, 120); // shorten if too long
+      return caption;
+    } else {
+      return "When code works on the first try 😂";
+    }
+  } catch (error) {
+    console.error(error);
+    return "AI lost connection... meme later!";
+  }
 }
 
 // Draw caption on canvas
@@ -58,3 +91,4 @@ downloadBtn.addEventListener("click", () => {
   const link = canvas.toDataURL("image/png");
   downloadBtn.href = link;
 });
+
