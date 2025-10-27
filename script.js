@@ -27,34 +27,34 @@ imageUpload.addEventListener("change", (e) => {
 
 // Generate caption (currently random)
 
-const HUGGINGFACE_API_KEY = "process.env.HUGGINGFACE_API_KEY;"; 
+async function generateCaption() {
+  const image = document.getElementById("uploadedImage")?.src;
+  const promptInput = document.getElementById("promptInput")?.value || "";
 
-async function getCaption(promptText = "funny meme caption about daily life") {
-  const API_URL = "https://api-inference.huggingface.co/models/gpt2";
+  const finalPrompt = `
+You are a viral meme caption writer. Write a short, punchy, hilarious, and relatable meme caption for the uploaded image.
+Avoid describing the image literally. Never use {} or []. Be sarcastic, ironic, or darkly funny.
+Example tones:
+- When you realize tomorrow is Monday 😩
+- Me trying to act normal after 3 hours of crying 💀
+- POV: you said “I’ll sleep early”
+User custom idea: ${promptInput}
+  `;
 
-  const headers = {
-    "Authorization": `Bearer ${HUGGINGFACE_API_KEY}`,
-    "Content-Type": "application/json"
-  };
-
-  const body = JSON.stringify({
-    inputs: promptText,
-    parameters: {
-      max_new_tokens: 20,
-      temperature: 0.9,
-      top_p: 0.9
-    }
+  const response = await fetch("https://api-inference.huggingface.co/models/gpt2", {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer " + HUGGING_FACE_TOKEN, // replace this
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ inputs: finalPrompt })
   });
 
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers,
-      body
-    });
+  const data = await response.json();
+  const caption = data[0]?.generated_text || "When AI forgets how to joke 😂";
+  document.getElementById("captionDisplay").innerText = caption;
+}
 
-    const result = await response.json();
-    console.log(result); // optional: for debugging
 
     // Extract the generated text
     if (result && Array.isArray(result) && result[0]?.generated_text) {
@@ -91,4 +91,5 @@ downloadBtn.addEventListener("click", () => {
   const link = canvas.toDataURL("image/png");
   downloadBtn.href = link;
 });
+
 
