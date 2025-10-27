@@ -26,6 +26,7 @@ imageUpload.addEventListener("change", (e) => {
 });
 
 // Generate caption (currently random)
+const HUGGING_FACE_TOKEN = process.env.HF_TOKEN;
 
 async function generateCaption() {
   const image = document.getElementById("uploadedImage")?.src;
@@ -91,5 +92,6 @@ downloadBtn.addEventListener("click", () => {
   const link = canvas.toDataURL("image/png");
   downloadBtn.href = link;
 });
+
 
 
